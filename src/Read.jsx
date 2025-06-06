@@ -42,8 +42,9 @@ function Read() {
                 <strong>Monthly Salary:</strong> {data.monthlySalary}
             </div>
             <div className='d-flex justify-content-end'>
-                <button className='btn btn-primary me-2'>Edit</button>
-                <button className='btn btn-danger'>Delete</button>
+                {/* <button className='btn btn-primary me-2'>Update</button> */}
+                <Link to={`/update/${data.id}`} className='btn btn-warning'>update</Link>
+                {/* <button className='btn btn-danger'>Delete</button> */}
             </div>
             <div className='d-flex justify-content-end mt-3'>
                 <Link to="/" className='btn btn-success'>Back to Home</Link>

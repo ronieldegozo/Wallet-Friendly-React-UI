@@ -47,7 +47,7 @@ function Home() {
                         <Link to={`/read/${user.id}`} className='btn btn-success'>read</Link>
                     </td>
                     <td>
-                       <button className='btn btn-primary'>edit</button> 
+                        <Link to={`/update/${user.id}`} className='btn btn-warning'>update</Link>
                     </td>
                     <td>
                         <button className='btn btn-danger'>delete</button> 
