@@ -16,7 +16,7 @@ function Read() {
                 .catch(error => {
                     console.error("Error fetching data:", error);
                 });
-        }, []);
+        }, [userId]); // Dependency array to run effect when userId changes
 
 
   return (
