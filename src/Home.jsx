@@ -44,7 +44,7 @@ function Home() {
                     <td>{user.occupation}</td>
                     <td>{user.monthlySalary}</td>
                     <td>
-                        <button className='btn btn-success'>read</button>
+                        <Link to={`/read/${user.id}`} className='btn btn-success'>read</Link>
                     </td>
                     <td>
                        <button className='btn btn-primary'>edit</button> 

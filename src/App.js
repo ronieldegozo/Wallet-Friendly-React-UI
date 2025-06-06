@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React from 'react'
 import Home from './Home';
 import Create from './Create';
 import Update from './Update';
@@ -14,7 +15,7 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/create' element={<Create />} />
             <Route path='/update/:id' element={<Update />} />
-            <Route path='/read/:id' element={<Read />} />
+            <Route path='/read/:userId' element={<Read />} />
           </Routes>
         </BrowserRouter>
     </div>
