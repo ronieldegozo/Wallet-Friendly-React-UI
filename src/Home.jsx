@@ -1,21 +1,42 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Home() {
     const [data, setData] = useState([]);
 
-        useEffect(() => {
-            axios.get('https://wallet-friendly.fly.dev/rest/v1/savings')
-                .then(response => {
-                    const usersSavings = response.data.data;
-                    console.log("Fetched data:", usersSavings);
-                    setData(usersSavings); // Now this is the array you can map over
-                })
-                .catch(error => {
-                    console.error("Error fetching data:", error);
-                });
-        }, []);
+    useEffect(() => {
+        axios.get('https://wallet-friendly.fly.dev/rest/v1/savings')
+            .then(response => {
+            const usersSavings = response.data.data;
+                console.log("Fetched data:", usersSavings);
+                setData(usersSavings); // Now this is the array you can map over
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    }, []);
+
+    const navigate = useNavigate();
+
+    const handleDelete = (id) => {
+    console.log("Deleting user with ID:", id);
+    const confirm = window.confirm("Are you sure you want to delete this user?");
+    if (!confirm) {
+        console.log("Delete cancelled");
+        return;
+    }
+        axios.delete(`https://wallet-friendly.fly.dev/rest/v1/savings/user/${id}`)
+            .then(response => {
+                console.log("Delete response:", response);
+                navigate('/'); // Redirect to home after deletion   
+                setData(data.filter(user => user.id !== id)); // Update state to remove deleted user
+                alert("User deleted successfully!");
+            })
+            .catch(error => {
+                console.error("Error deleting user:", error);
+            });
+    }
 
     return (
     <div className='d-flex flex-column align-items-center justify-content-center vh-100'>
@@ -50,7 +71,7 @@ function Home() {
                         <Link to={`/update/${user.id}`} className='btn btn-warning'>update</Link>
                     </td>
                     <td>
-                        <button className='btn btn-danger'>delete</button> 
+                        <button onClick={event => handleDelete(user.id)} className='btn btn-danger'>delete</button> 
                     </td>
                 </tr>
                 ))}
