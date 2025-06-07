@@ -8,7 +8,7 @@ import axios from 'axios';
 function Cards() {
   const [data, setData] = useState([]);
   const [totalCount, setTotalCount] = useState(0); // ✅ New state for count
-
+  console.log("Initial data:", data);
   useEffect(() => {
     axios.get('https://wallet-friendly.fly.dev/rest/v1/savings')
       .then(response => {
