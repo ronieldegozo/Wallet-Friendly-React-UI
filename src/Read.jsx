@@ -41,6 +41,27 @@ function Read() {
             <div className='mb-2'>
                 <strong>Monthly Salary:</strong> {data.monthlySalary}
             </div>
+            <div className='mb-2'>
+              <strong>User List of Savings:</strong>
+              <div>
+                {data.categories && data.categories.length > 0 ? (
+                  <>
+                    <ul style={{ paddingLeft: "1rem", margin: 0 }}>
+                      {data.categories.map((cat) => (
+                        <li key={cat.category_id}>
+                          <strong>{cat.name}</strong>: ₱{cat.amount} ({cat.type})
+                        </li>
+                      ))}
+                    </ul>
+                    <p style={{ marginTop: '0.5rem' }}>
+                      <strong>Monthly fixed Category </strong> ₱{data.savingsCategorySubTotal}
+                    </p>
+                  </>
+                ) : (
+                  <em>No savings categories</em>
+                )}
+              </div>
+            </div>
             <div className='d-flex justify-content-end'>
                 {/* <button className='btn btn-primary me-2'>Update</button> */}
                 <Link to={`/update/${data.id}`} className='btn btn-warning'>update</Link>

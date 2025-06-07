@@ -6,7 +6,7 @@ import NavBar from './layouts/Components/NavBar';
 import Table from 'react-bootstrap/Table';
 
 
-function Home() {
+function Home({ user }) {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -42,6 +42,56 @@ function Home() {
             });
     }
 
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    amount: "",
+    type: "Goal Based Savings",
+  });
+  const [currentUserId, setCurrentUserId] = useState(null); // store user id from button click
+
+  // Called when user clicks button, receives user id
+  const createUserCategory = (id) => {
+    console.log("Create user Categories with ID:", id);
+    setCurrentUserId(id);      // save the id to use in submit
+    setIsModalOpen(true);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!currentUserId) {
+      alert("User ID not found.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://wallet-friendly.fly.dev/rest/v1/category/savings/userid/${currentUserId}`,
+        formData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      console.log("Category created:", response.data);
+      alert("Category created successfully!");
+      setIsModalOpen(false);
+      setFormData({ name: "", amount: "", type: "Goal Based Savings" });
+      setCurrentUserId(null); // clear stored ID after submit
+    } catch (error) {
+      console.error("Error creating category:", error);
+      alert("Failed to create category");
+    }
+  };
+
+  const userDepositAmount = (id) => {
+    console.log("Deposit amount for user ID:", id);
+  }
     return (
     <div className='table-responsive'>
       <NavBar />
@@ -77,11 +127,92 @@ function Home() {
                 >
                   Delete
                 </button>
+                <buttom className="btn btn-primary btn-sm" onClick={() => createUserCategory(user.id)}>
+                  Create Category Deposit
+                </buttom>
+                <buttom className="btn btn-primary btn-sm" onClick={() => userDepositAmount(user.id)}>
+                  Deposit
+                </buttom>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div
+          className="modal d-block"
+          tabIndex="-1"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <form onSubmit={handleSubmit}>
+                <div className="modal-header">
+                  <h5 className="modal-title">Create Deposit Category</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setIsModalOpen(false)}
+                  ></button>
+                </div>
+
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label className="form-label">Name</label>
+                    <input
+                      name="name"
+                      type="text"
+                      className="form-control"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Amount</label>
+                    <input
+                      name="amount"
+                      type="number"
+                      className="form-control"
+                      value={formData.amount}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Type</label>
+                    <input
+                      name="type"
+                      type="text"
+                      className="form-control"
+                      value={formData.type}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Create
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
