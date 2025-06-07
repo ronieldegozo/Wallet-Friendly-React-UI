@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Cards from './components/Cards';
+import NavBar from './layouts/Components/NavBar';
+import Table from 'react-bootstrap/Table';
+
 
 function Home() {
     const [data, setData] = useState([]);
@@ -40,132 +42,46 @@ function Home() {
             });
     }
 
-      const [show, setShow] = React.useState(false);
-    
-      const handleClose = () => setShow(false);
-      const handleShow = () => setShow(true);
-
-  const [values, setValues] = React.useState({
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    occupation: '',
-    monthlySalary: ''
-  });
-
-
-  const handleSumit = (event) => {
-    event.preventDefault();
-    console.log("Form submitted with values:", values);
-
-  const payload = {
-    ...values,
-    monthlySalary: values.monthlySalary.toString() // Send as string for backend BigDecimal
-  };
-
-  axios.post('https://wallet-friendly.fly.dev/rest/v1/savings', payload)
-      .then(response => {
-        console.log("User created successfully:", response.data);
-        navigate('/'); // Redirect to home page after successful creation
-        alert("User created successfully!");
-        window.location.reload();
-      })
-      .catch(error => {
-        console.error("Error creating user:", error);
-      });
-  }
-
-
-
     return (
-    <div className='d-flex flex-column align-items-center justify-content-center vh-100'>
-        <h1 className='text-center'>Savings</h1>
-        <div className='d-flex justify-content-end w-100 shadow p-4'>
-        <Button variant="primary" onClick={handleShow}>
-           Create User
-        </Button>
-        
-        <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create New User</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form  id="createUserForm"  onSubmit={handleSumit}>
-              <div className="mb-2">
-                <label htmlFor="FirstName">FirstName: </label>
-                <input type="text" name="First Name" className='form-control' placeholder='Enter First Name' onChange={
-                  (e) => setValues({ ...values, firstName: e.target.value })
-                } required/>
-              </div>
-              <div className="mb-2">
-                <label htmlFor="MiddleName">MiddleName: </label>
-                <input type="text" name="Middle Name" className='form-control' placeholder='Enter Middle Name' onChange={
-                  (e) => setValues({ ...values, middleName: e.target.value })
-                } required/>
-              </div>
-              <div className="mb-2">
-                <label htmlFor="LastName">LastName: </label>
-                <input type="text" name="Last Name" className='form-control' placeholder='Enter Last Name' onChange={
-                  (e) => setValues({ ...values, lastName: e.target.value })
-                } required/>
-              </div>
-              <div className="mb-2">
-                <label htmlFor="Occupation">Occupation: </label>
-                <input type="text" name="Occupation" className='form-control' placeholder='Enter Occupation' onChange={
-                  (e) => setValues({ ...values, occupation: e.target.value })
-                } required/>
-              </div>
-              <div className="mb-2">
-                <label htmlFor="MonthlySalary">Monthly Salary: </label>
-                <input type="number" name="Monthly Salary" className='form-control' placeholder='Enter Monthly Salary' onChange={
-                  (e) => setValues({ ...values, monthlySalary: e.target.value })
-                }required />
-              </div>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-            <Button variant="primary"  type="submit" form="createUserForm">
-            Save Changes
-            </Button>
-        </Modal.Footer>
-      </Modal>
-        </div>
-        <table className='table tavle-striped table-bordered'>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Middle Name</th>
-                    <th>Occupation</th>
-                    <th>Monthly Salary</th>
-                </tr>                
-            </thead>
-            <tbody>
-                {data.map((user, index) => (
-                <tr key={index}>
-                    <td>{user.id}</td>
-                    <td>{user.firstName}</td>
-                    <td>{user.middleName}</td>
-                    <td>{user.lastName}</td>
-                    <td>{user.occupation}</td>
-                    <td>{user.monthlySalary}</td>
-                    <td>
-                        <Link to={`/read/${user.id}`} className='btn btn-success'>read</Link>
-                    </td>
-                    <td>
-                        <Link to={`/update/${user.id}`} className='btn btn-warning'>update</Link>
-                    </td>
-                    <td>
-                        <button onClick={event => handleDelete(user.id)} className='btn btn-danger'>delete</button> 
-                    </td>
-                </tr>
-                ))}
-            </tbody>
-        </table>
+    <div className='table-responsive'>
+      <NavBar />
+      <Cards/>
+
+      <Table striped bordered hover variant="dark" className="mt-4">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Occupation</th>
+            <th>Monthly Salary</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((user) => (
+            <tr key={user.id}>
+              <td>{user.id}</td>
+              <td>{user.firstName}</td>
+              <td>{user.middleName}</td>
+              <td>{user.lastName}</td>
+              <td>{user.occupation}</td>
+              <td>{user.monthlySalary}</td>
+              <td className="d-flex gap-2 flex-wrap">
+                <Link to={`/read/${user.id}`} className="btn btn-success btn-sm">Read</Link>
+                <Link to={`/update/${user.id}`} className="btn btn-warning btn-sm">Update</Link>
+                <button
+                  onClick={() => handleDelete(user.id)}
+                  className="btn btn-danger btn-sm"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   )
 }

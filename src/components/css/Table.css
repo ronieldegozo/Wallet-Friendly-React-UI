@@ -1,0 +1,12 @@
+.table-container {
+  overflow-x: auto;
+}
+
+.animated-table tr {
+  transition: all 0.3s ease-in-out;
+}
+
+.animated-table tr:hover {
+  background-color: #f0f8ff;
+  transform: scale(1.01);
+}

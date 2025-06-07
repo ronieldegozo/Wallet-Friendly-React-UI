@@ -1,0 +1,9 @@
+/* src/components/NavbarStyles.css */
+.animate-slide .offcanvas {
+  transform: translateX(100%);
+  transition: transform 0.4s ease-in-out;
+}
+
+.animate-slide .offcanvas.show {
+  transform: translateX(0);
+}
