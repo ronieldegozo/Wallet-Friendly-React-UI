@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import Alert from 'react-bootstrap/Alert';
 
 export default function CreateUserModal({ showCreateUser, handleClose }) {
-  const navigate = useNavigate();
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [values, setValues] = useState({
     firstName: '',
     middleName: '',
@@ -24,9 +24,10 @@ export default function CreateUserModal({ showCreateUser, handleClose }) {
     axios.post('https://wallet-friendly.fly.dev/rest/v1/savings', payload)
       .then(response => {
         console.log("User created successfully:", response.data);
-        navigate('/');
-        alert("User created successfully!");
-        window.location.reload();
+        setShowSuccessAlert(true);
+                setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       })
       .catch(error => {
         console.error("Error creating user:", error);
@@ -35,6 +36,23 @@ export default function CreateUserModal({ showCreateUser, handleClose }) {
 
   return (
     <>
+      {/* Floating Success Alert */}
+      {showSuccessAlert && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 1055, // above modal (zIndex 1050 in Bootstrap)
+          minWidth: '300px'
+        }}>
+          <Alert variant="success" onClose={() => setShowSuccessAlert(false)} >
+            <Alert.Heading>User Created Successfully!</Alert.Heading>
+            <p>The page will reload shortly.</p>
+          </Alert>
+        </div>
+      )}
+
+      {/* Modal */}
       <Modal show={showCreateUser} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Create New User</Modal.Title>
@@ -42,32 +60,32 @@ export default function CreateUserModal({ showCreateUser, handleClose }) {
         <Modal.Body>
           <form id="createUserForm" onSubmit={handleSubmit}>
             <div className="mb-2">
-              <label htmlFor="FirstName">FirstName:</label>
-              <input type="text" name="First Name" className='form-control' placeholder='Enter First Name' onChange={
+              <label>First Name:</label>
+              <input type="text" className='form-control' placeholder='Enter First Name' onChange={
                 (e) => setValues({ ...values, firstName: e.target.value })
               } required />
             </div>
             <div className="mb-2">
-              <label htmlFor="MiddleName">MiddleName:</label>
-              <input type="text" name="Middle Name" className='form-control' placeholder='Enter Middle Name' onChange={
+              <label>Middle Name:</label>
+              <input type="text" className='form-control' placeholder='Enter Middle Name' onChange={
                 (e) => setValues({ ...values, middleName: e.target.value })
               } required />
             </div>
             <div className="mb-2">
-              <label htmlFor="LastName">LastName:</label>
-              <input type="text" name="Last Name" className='form-control' placeholder='Enter Last Name' onChange={
+              <label>Last Name:</label>
+              <input type="text" className='form-control' placeholder='Enter Last Name' onChange={
                 (e) => setValues({ ...values, lastName: e.target.value })
               } required />
             </div>
             <div className="mb-2">
-              <label htmlFor="Occupation">Occupation:</label>
-              <input type="text" name="Occupation" className='form-control' placeholder='Enter Occupation' onChange={
+              <label>Occupation:</label>
+              <input type="text" className='form-control' placeholder='Enter Occupation' onChange={
                 (e) => setValues({ ...values, occupation: e.target.value })
               } required />
             </div>
             <div className="mb-2">
-              <label htmlFor="MonthlySalary">Monthly Salary:</label>
-              <input type="number" name="Monthly Salary" className='form-control' placeholder='Enter Monthly Salary' onChange={
+              <label>Monthly Salary:</label>
+              <input type="number" className='form-control' placeholder='Enter Monthly Salary' onChange={
                 (e) => setValues({ ...values, monthlySalary: e.target.value })
               } required />
             </div>

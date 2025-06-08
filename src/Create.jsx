@@ -26,7 +26,6 @@ function Create() {
       .then(response => {
         console.log("User created successfully:", response.data);
         navigate('/'); // Redirect to home page after successful creation
-        alert("User created successfully!");
       })
       .catch(error => {
         console.error("Error creating user:", error);
